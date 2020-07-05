@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="Bem vindo Potterhead!!"
-                android:textColor="#363A43"
+                android:textColor="@color/darkGreyTextColor"
                 android:textSize="25sp"
                 android:textStyle="bold"/>
 
@@ -55,8 +55,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Digite seu nome"
-                    android:textColor="#363A43"
-                    android:textColorHint="#7A8089"/>
+                    android:textColor="@color/darkGreyTextColor"
+                    android:textColorHint="@color/textColor"/>
 
             </com.google.android.material.textfield.TextInputLayout>
 
