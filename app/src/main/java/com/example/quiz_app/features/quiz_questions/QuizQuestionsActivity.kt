@@ -1,10 +1,12 @@
 package com.example.quiz_app.features.quiz_questions
 
+import android.content.Intent
 import android.graphics.Typeface
 import android.os.Bundle
 import android.view.View
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.quiz_app.Constants
@@ -16,6 +18,8 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
     private var currentPosition: Int = 1
     private var questionsList: ArrayList<Questions>? = null
     private var selectedOptionPosition: Int = 0
+    private var correctAnswers: Int = 0
+    private var wrongAnswers: Int = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,6 +33,25 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
         tv_option_three.setOnClickListener(this)
         tv_option_four.setOnClickListener(this)
         btn_send_answer.setOnClickListener(this)
+    }
+
+    private fun setResults(){
+        val name = intent.getStringExtra("name")
+        val alertDialog = AlertDialog.Builder(this)
+        alertDialog.setTitle("Parabéns $name!!")
+        alertDialog.setMessage("Voce acertou $correctAnswers, e errou $wrongAnswers.")
+        alertDialog.setPositiveButton("Ok, refazer quiz") { dialog, _ ->
+            dialog.dismiss()
+            val intent = Intent(this, QuizQuestionsActivity::class.java)
+            startActivity(intent)
+        }
+
+        alertDialog.setNegativeButton("Cancelar") { dialog, _ ->
+            dialog.dismiss()
+        }
+
+        val dialog: AlertDialog = alertDialog.create()
+        dialog.show()
     }
 
     private fun setQuestion(){
@@ -116,20 +139,25 @@ class QuizQuestionsActivity : AppCompatActivity(), View.OnClickListener {
                         currentPosition <= questionsList!!.size -> {
                             setQuestion()
                         }else-> {
-                            Toast.makeText(this, "Parabéns, você completou o quiz!!!", Toast.LENGTH_SHORT).show()
+                            val intent = Intent(this, QuizQuestionsActivity::class.java)
+                            startActivity(intent)
                         }
                     }
                 }else{
                     val question = questionsList?.get(currentPosition - 1)
 
                     if(question!!.correctAnswer != selectedOptionPosition){
+                        wrongAnswers++
                         answerView(selectedOptionPosition, R.drawable.wrong_option_border)
+                    }else{
+                        correctAnswers++
                     }
 
                     answerView(question.correctAnswer, R.drawable.correct_option_border)
 
                     if(currentPosition == questionsList!!.size){
-                        btn_send_answer.text = "Fim"
+                        setResults()
+                        btn_send_answer.text = "Fim, refazer quiz"
                     }else{
                         btn_send_answer.text = "Ir para a próxima pergunta"
                     }
